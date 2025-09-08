@@ -1,0 +1,12 @@
+# 1- Database description 
+# For this database I'm envisioning a simple movie database of all (or just some of) the films I've seen since we formally started recording them in, good lord that's longer than I thought, July of 2022.
+# 2 - Entity types
+# ### Entity Type: Film -Attributes | Film name, film length, film genre, film provider, film director, nation of creation (maybe actors? Ask Jeff about this). -Examples | Mars Express, Howl's Moving Castle, Amores Perros
+# ### Entity Type: Provider -Attributes | Content Licenser, type of service (subscription, rental), who provides access to this content: Jacob, Tarl, or Owen S.. -Examples | Netflix, Amazon Prime, HBO
+# ### Entity Type: Directory -Attributes | First name, Last name, total films, typical genre, prominant actors they feature (Ask Jeff). -Examples | Alejandro González Iñárritu, Hayao Miyazaki, Jérémie Périn
+# ### Entity Type: Actor -Attributes | First name, Last name, nationality (Language?), gender. -Examples | Morla Gorrondona, Jean Simmons, Emily Mortimer, Gael García Bernal
+# 3 - 3 queries/questions I'd use this database for
+# 3.1 What is every movie of this genre that I've watched (by a particular director)?
+# 3.2 What service/provider is each movie by a particular director on?
+# 3.3 In descending order, what are the movies I'd rated the highest of a particular genre (or by director)?
+# "This is clearly not how this files are meant to be used"
