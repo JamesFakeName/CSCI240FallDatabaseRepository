@@ -1,0 +1,16 @@
+# "I'd love to do a database of books I've read, but I have concerns I wouldn't have any succesful databases to look at as examples, or that there won't be enough material to work with"
+# 1- Database description 
+# This would be a database of all the (entertainment, I'm not counting textbooks) books I can remember reading, or own physically, explicitly to help me rank them and recommend them to others 
+# 2 - Entity types
+# ### Entity Type: Book  -Attributes | Title, Genre, Format, Ranking, Publishing Date -Examples | The Goblin Emperor, Three Body Problem, The Dark Elf Trilogy
+# ### Entity Type: Author  -Attributes | First Name, Last Name, Most Common Genre, -Examples | Sarah Monette, R.A. Salvatore (what would I do for authors who acronym their name?), Brandon Sanderson
+# ### Entity Type:  -Attributes |   -Examples | 
+# ### Entity Type: -Attributes |-Examples |
+# "As you can see here, I was struggling to think of two more entity types that would have enough attributes for class. Publisher could work but is horribly boring. I'd want to do Genre and Ranking system,"
+# "but neither of those really have enough to them"                                       
+# 3 - 3 queries/questions I'd use this database for
+# 3.1 Every book of a particular author of a certain ranking, review type
+# 3.2 Show each multi-book series 
+# 3.3 Show each genre by descending rank (I have almost no clue how you'd get a solid answer with a database)
+# 3.3.2 Show each book of a particular rank in this genre                                         
+# "I'd love to do books, but I think there would be issues"
