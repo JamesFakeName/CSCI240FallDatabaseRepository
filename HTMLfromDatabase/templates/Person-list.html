@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block header %}
+FilmClub Person table 
+{% endblock %}
+
+{% block content %}
+
+<table>
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+  </tr>
+  {% for row in collection %}
+  <tr>
+    <td>
+      {{row[0]}}
+    </td>
+    <td>
+      {{row[1]}}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+<h2>Insert a new value here</h2>
+<form action="">
+  First Name: <input type="text" name="firstname"><br />
+  Last Name: <input type="text" name="lastname"><br />
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}
