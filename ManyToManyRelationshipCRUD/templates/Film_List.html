@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block header %}{{pageTitle}}{% endblock %}
+{% block title %}Showing all Films{% endblock %}
+
+
+{% block content %}
+
+<table>
+  <tr>
+    <th>Film ID</th>
+    <th>Film Title</th>
+    <th>Genre</th>
+    <th>Nationality</th>
+    <!-- <th>Run Time</th>  I'll be honest, I don't want to try to get this to work-->
+    <!-- Run time uses the 'time' format in SQL, I don't really want to get user inputs to work with that-->
+  </tr>
+  {% for row in FilmList_py %}
+  <tr>
+    <td>
+      {{row[0]}}
+    </td>
+    <td>
+      {{row[1]}}
+    </td>
+    <td>
+      {{row[2]}}
+    </td>
+    <td>
+      {{row[3]}}
+    </td>
+    <td>
+      <a href="/1Film_info?Film_ID={{row[0]}}">View Film</a><br />
+      <a href="/Film_List?delete_Film_id={{row[0]}}">Delete Film</a><br />
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+
+<h3>Add new film</h3>
+<form action="">
+  Film ID: <input name="new_Film_ID" ><br /> <!-- If there is time find a way to make Film ID optional -->
+  Film Title: <input name="new_Film_Title"><br /> 
+  Film Genre: <input name="new_Film_Genre"><br /> 
+  Film Nation of Origin: <input name="new_Film_Nationality"><br /> 
+  <input type="submit" value="Add Film">
+</form>
+{% endblock %}
+<!-- I could have been better about setting up variable names-->
+<!--VarNames: new_Film_ID new_Film_Title new_Film_Genre new_Film_Nationality -->

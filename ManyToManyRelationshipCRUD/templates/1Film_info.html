@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block header %}{{pageTitle}}{% endblock %}
+{% block title %}Single Film Information{% endblock %}
+
+
+{% block content %}
+
+<form action="">
+  <h2>Information for the Film: {{Title}} <input type="hidden" name="Title" value="{{Title}}"><br /></h2>
+  <h2>You may also update {{Title}}'s information here if you wish.<input type="hidden" name="Title" value="{{Title}}"><br /></h2>
+  Film ID: <input type="int" name="Film_ID" value="{{Film_ID}}"><br />
+  Film Title: <input type="text" name="Title" value="{{Title}}"><br /> <!-- May need varchar -->
+  Film Genre: <input type="text" name="Genre" value="{{Genre}}"><br />
+  Film Nation of Origin: <input type="text" name="Nationality" value="{{Nationality}}"><br />
+  <input type="submit" value="Update Information">
+</form>
+
+<h2>Actors in this film:</h2>
+
+<table>
+  <tr>
+    <th>Actor ID</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <!-- I don't know if I should add the 'Gender', 'Lead_or_Side_Role', or 'Typical_Role' attributes. Ask Jeff -->
+  </tr>
+{% for Actor in ActorsInFilm %} <!-- Check the naming scheme later -->
+  <tr>
+    <td>{{Actor[0]}}</td>
+    <td>{{Actor[1]}}</td>
+    <td>{{Actor[2]}}</td>
+    <td><a href="1actor_info?Actor_ID={{Actor[0]}}">View Actor</a></td>
+    <td><a href="1Film_info?remove_Actor_ID={{Actor[0]}}&Film_ID={{Film_ID}}">Remove Actor from this Film</a></td>
+  </tr>
+{% endfor %}
+</table>
+{% endblock %}

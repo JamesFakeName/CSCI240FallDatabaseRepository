@@ -1,0 +1,20 @@
+<!-- I'm basically just using Jeff's example, but adding a title blurb -->
+<!doctype html>
+<html>
+   <head>
+      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+      <title>{% block title %}{% endblock %} FilmClub Database - Actor & Film interaction</title></head>
+   <body>
+      <h1> 
+         {% block header %}{% endblock %}
+      </h1>
+      <p style="font-size: 24px;"> Welcome to the FilmClub database webpage!</p>
+      <p style="font-size: 20px;"> Please select the option you would like!  </p>
+      <!-- Will have to make sure this doesn't mess up other html pages-->
+      {% block content %}{% endblock %}
+      <p><a href="/films">Show all films.</a></p>
+      <p><a href="/People">Show all people.</a></p>
+      <p><a href="/actor">Show all actors.</a></p>
+   </body>
+</html>
+<!-- Will need further editing -->
