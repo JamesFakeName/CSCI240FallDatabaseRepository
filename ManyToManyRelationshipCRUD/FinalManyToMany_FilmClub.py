@@ -46,7 +46,7 @@ def get_Films():
     connection.close()
     return render_template('Film_List.html', FilmList=allFilms, pageTitle=pageTitle)
 
-@app.route('/1Film_info', methods=['GET'])
+@app.route('/1Film_info', methods=['GET']) #Goes with 1Film_info.html, double check later
 def get_1Film_info():
     Film_ID = request.args.get('Film_ID')
     
@@ -58,21 +58,25 @@ def get_1Film_info():
     mycursor = connection.cursor()
 
     # update film info
-    course_nam = request.args.get('course_name')
-    course_code = request.args.get('course_code')
-    if course_name is not None and course_code is not None:
-        mycursor.execute("UPDATE course set course_name=%s, course_code=%s where id=%s", (course_name, course_code, course_id))
+    update_1Film_info = (
+      #request.args.get('Film_ID'), Think this has to not be here
+      request.args.get('Title'),
+      request.args.get('Genre'),
+      request.args.get('Nationality')
+    )
+    if not None in update_1Film_info:
+        mycursor.execute("UPDATE Film set Title=%s, Genre=%s, Nationality=%s where Film_ID=%s", (Title, Genre, Nationality, Film_ID))
         connection.commit()
 
     # retrieve course information
-    mycursor.execute("SELECT course_name, course_code from course where id=%s", (course_id,))
+    mycursor.execute("SELECT Title, Genre, Nationality from Film where id=%s", (Film_ID,))
     try:
-        course_name, course_code = mycursor.fetchall()[0]
+        Title, Genre, Nationality = mycursor.fetchall()[0]
     except:
-        return render_template("error.html", message="Error retrieving course - perhaps it doesn't exist")
+        return render_template("error.html", message="Error retrieving Film - perhaps it doesn't exist?")
     
-    # retrieve existing sections of course
-    mycursor.execute("SELECT id, meeting_time, meeting_days, meeting_room from section where course_id=%s", (course_id,))
+    # retrieve actors for this film
+    mycursor.execute("SELECT Person_ID, First_Name, Last_Name FROM Person WHERE Person_ID in (SELECT Actor_ID FROM FilmActor WHERE Film_ID=%s)", (Film_ID,))
     existingSections = mycursor.fetchall()
     
     mycursor.close()
