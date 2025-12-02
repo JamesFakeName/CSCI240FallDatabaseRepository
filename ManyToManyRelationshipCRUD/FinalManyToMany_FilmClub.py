@@ -29,7 +29,7 @@ def get_Films():
         connection.commit()
 
     # check to see if a film needs to be deleted
-    delete_Film_ID = request.args.get('delete_Film_ID')
+    delete_Film_ID = request.args.get('delete_Film_id')
     if delete_Film_ID is not None:
         try:
             mycursor.execute("delete from Film where Film_ID=%s",(delete_Film_ID,))
@@ -44,13 +44,13 @@ def get_Films():
 
     mycursor.close()
     connection.close()
-    return render_template('Film_List.html', FilmList=allFilms, pageTitle=pageTitle)
+    return render_template('Film_List.html', allFilms=allFilms, pageTitle=pageTitle)
 
 @app.route('/1Film_info', methods=['GET']) #Goes with 1Film_info.html, double check later
 def get_1Film_info():
     Film_ID = request.args.get('Film_ID')
     
-    # redirect to all courses if no id was provided
+    # redirect to all films if no id was provided
     if Film_ID is None:
         return redirect(url_for("get_Films"))
 
@@ -59,7 +59,7 @@ def get_1Film_info():
 
     # update film info
     update_1Film_info = (
-      #request.args.get('Film_ID'), Think this has to not be here
+      request.args.get('Film_ID'), #Think this has to not be here
       request.args.get('Title'),
       request.args.get('Genre'),
       request.args.get('Nationality')
@@ -68,8 +68,8 @@ def get_1Film_info():
         mycursor.execute("UPDATE Film set Title=%s, Genre=%s, Nationality=%s where Film_ID=%s", (Title, Genre, Nationality, Film_ID))
         connection.commit()
 
-    # retrieve course information
-    mycursor.execute("SELECT Title, Genre, Nationality from Film where id=%s", (Film_ID,))
+    # retrieve film information
+    mycursor.execute("SELECT Title, Genre, Nationality from Film where Film_ID=%s", (Film_ID,))
     try:
         Title, Genre, Nationality = mycursor.fetchall()[0]
     except:
@@ -77,20 +77,26 @@ def get_1Film_info():
     
     # retrieve actors for this film
     mycursor.execute("SELECT Person_ID, First_Name, Last_Name FROM Person WHERE Person_ID in (SELECT Actor_ID FROM FilmActor WHERE Film_ID=%s)", (Film_ID,))
-    existingSections = mycursor.fetchall()
+    ActorsInFilm = mycursor.fetchall()
+
+    # retrieve list of other films the actor is not in 
+    mycursor.execute("""SELECT )
+
+
     
     mycursor.close()
     connection.close()
 
-    return render_template("course-info.html",
-                           course_id=course_id,
-                           course_name=course_name,
-                           course_code=course_code,
-                           existingSections=existingSections
-                           )
-
-
-
+    return render_template(
+        "1Film_info.html", 
+        ActorsInFilm=ActorsInFilm, 
+        Film_ID=Film_ID, 
+        Title=Title, 
+        Genre=Genre, 
+        Nationality=Nationality, 
+        CreditedActors=CreditedActors
+        UncreditedActors=AllActors
+        )
 
 if __name__ == '__main__':
     app.run(port=8001, debug=True, host="0.0.0.0")

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block header %}{{pageTitle}}{% endblock %}
+{% block title %}Showing all Actors{% endblock %}
+
+
+{% block content %}
+
+<table>
+  <tr>
+    <th>Actor ID</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+  </tr>
+  {% for row in Actor_List_py %} <!-- What was I doing with the underscore_py thing here? -->
+  <tr>
+    <td>
+      {{row[0]}}
+    </td>
+    <td>
+      {{row[1]}}
+    </td>
+    <td>
+      {{row[2]}}
+    </td>
+    <td>
+      <a href="/1Actor_info?Person_ID={{row[0]}}">View Actor</a><br /> <!-- Make sure Person_ID is correct -->
+      <a href="/Actor_List?delete_Person_id={{row[0]}}">Remove Actor</a><br /> <!-- Make sure Person_ID is correct -->
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+
+<h3>Add a new actor</h3>
+<form action="">
+  Actor ID: <input name="new_Person_ID" ><br /> 
+  First Name: <input name="new_First_Name"><br /> 
+  Last Name: <input name="new_Last_Name"><br />  
+  <input type="submit" value="Add Actor">
+</form>
+{% endblock %}
+<!-- I could have been better about setting up variable names-->
+<!--VarNames: from Person table: Person_ID, First_Name, Last_Name -->
+<!-- from Actor table: Person_ID, Lead_or_Side_Role, Typical_Role, Gender -->
+<!-- from FilmActor relationship table: Film_Title, Actor_ID, Film_ID -->

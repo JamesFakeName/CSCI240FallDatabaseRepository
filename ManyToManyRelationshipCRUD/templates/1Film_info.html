@@ -35,4 +35,14 @@
   </tr>
 {% endfor %}
 </table>
+<form action="">
+<p><label for="register">Add additional actors</label></p>
+<select id="register" name="add_Person_ID"> <!-- Check if Person_ID or Actor_ID -->
+  {% for People in unregistered_sections %}
+  <option value="{{section[0]}}">{{section[0]}} - {{section[1]}} ({{section[2]}})</option>
+  {% endfor %}
+</select>
+<input type="hidden" name="student_id" value="{{student_id}}">
+<input type="submit" value="Add Actor">
+</form>
 {% endblock %}
