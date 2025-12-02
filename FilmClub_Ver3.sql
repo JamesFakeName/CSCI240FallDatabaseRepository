@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.43, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.44, for Linux (x86_64)
 --
 -- Host: localhost    Database: FilmClub
 -- ------------------------------------------------------
--- Server version	8.0.43-0ubuntu0.24.04.1
+-- Server version	8.0.44-0ubuntu0.24.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -137,7 +137,7 @@ CREATE TABLE `Film` (
   PRIMARY KEY (`Film_ID`),
   KEY `fk_Film_Person` (`Director_ID`),
   CONSTRAINT `fk_Film_Person` FOREIGN KEY (`Director_ID`) REFERENCES `Person` (`Person_ID`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -146,7 +146,7 @@ CREATE TABLE `Film` (
 
 LOCK TABLES `Film` WRITE;
 /*!40000 ALTER TABLE `Film` DISABLE KEYS */;
-INSERT INTO `Film` VALUES (1,'Amores Perros','Drama','Mexico','02:33:00',1),(2,'Howl\'s Moving Castle','Fantasy','Japan','01:59:00',2),(3,'Mars Express','SciFi','France','01:29:00',3),(4,'Pulp Fiction','Crime','USA','02:34:00',8);
+INSERT INTO `Film` VALUES (1,'Amores Perros','Drama','Mexico','02:33:00',1),(2,'Howl\'s Moving Castle','Fantasy','Japan','01:59:00',2),(3,'Mars Express','SciFi','France','01:29:00',3),(4,'Pulp Fiction','Crime','USA','02:34:00',8),(5,'FilmTest','Horror','Mexico',NULL,NULL);
 /*!40000 ALTER TABLE `Film` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,8 +164,8 @@ CREATE TABLE `FilmActor` (
   KEY `fk_FilmActor_Actor` (`Actor_ID`),
   KEY `fk_FilmActor_Film` (`Film_Title`),
   KEY `fk_FilmActor_Film_Film_ID` (`Film_ID`),
-  CONSTRAINT `fk_FilmActor_Actor` FOREIGN KEY (`Actor_ID`) REFERENCES `Actor` (`Person_ID`),
-  CONSTRAINT `fk_FilmActor_Film_Film_ID` FOREIGN KEY (`Film_ID`) REFERENCES `Film` (`Film_ID`)
+  CONSTRAINT `fk_FilmActor_Actor_Person_ID` FOREIGN KEY (`Actor_ID`) REFERENCES `Actor` (`Person_ID`) ON DELETE CASCADE,
+  CONSTRAINT `fk_FilmActor_Film_Film_ID` FOREIGN KEY (`Film_ID`) REFERENCES `Film` (`Film_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -175,7 +175,7 @@ CREATE TABLE `FilmActor` (
 
 LOCK TABLES `FilmActor` WRITE;
 /*!40000 ALTER TABLE `FilmActor` DISABLE KEYS */;
-INSERT INTO `FilmActor` VALUES ('Amores Perros',4,1),('Howl\'s Moving Castle',5,2),('Howl\'s Moving Castle',6,2),('Mars Express',7,3),('Pulp Fiction',8,4),(NULL,7,2);
+INSERT INTO `FilmActor` VALUES ('Amores Perros',4,1),('Howl\'s Moving Castle',5,2),('Howl\'s Moving Castle',6,2),('Mars Express',7,3),('Pulp Fiction',8,4),(NULL,7,2),('FilmTest',7,5),('FilmTest',4,5),('FilmTest',4,5),(NULL,6,5);
 /*!40000 ALTER TABLE `FilmActor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -266,4 +266,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-31 18:41:24
+-- Dump completed on 2025-12-02 23:11:12
