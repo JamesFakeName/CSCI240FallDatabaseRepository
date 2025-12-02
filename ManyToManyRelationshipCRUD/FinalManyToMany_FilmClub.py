@@ -58,15 +58,51 @@ def get_1Film_info():
     mycursor = connection.cursor()
 
     # update film info
-    update_1Film_info = (
-      request.args.get('Film_ID'), #Think this has to not be here
-      request.args.get('Title'),
-      request.args.get('Genre'),
-      request.args.get('Nationality')
-    )
-    if not None in update_1Film_info:
+    Film_ID = request.args.get('Film_ID') 
+    Title = request.args.get('Title')
+    Genre = request.args.get('Genre')
+    Nationality = request.args.get('Nationality')
+    if Film_ID is not None and Title is not None and Genre is not None and Nationality is not None:
         mycursor.execute("UPDATE Film set Title=%s, Genre=%s, Nationality=%s where Film_ID=%s", (Title, Genre, Nationality, Film_ID))
         connection.commit()
+
+    """ #Gotta move this down lower
+    # retrieve film information
+    mycursor.execute("SELECT Title, Genre, Nationality from Film where Film_ID=%s", (Film_ID,))
+    try:
+        Title, Genre, Nationality = mycursor.fetchall()[0]
+    except:
+        return render_template("error.html", message="Error retrieving Film - perhaps it doesn't exist?")
+    """
+    
+    """ #All retrieves must be lower down, even if it doesn't look as nice to human eyes
+    # retrieve actors for this film
+    mycursor.execute("SELECT Person_ID, First_Name, Last_Name FROM Person WHERE Person_ID in (SELECT Actor_ID FROM FilmActor WHERE Film_ID=%s)", (Film_ID,))
+    CreditedActors = mycursor.fetchall()
+    """ 
+
+    # functionality to add actor to a film #WHY DOES IT WORK NOW??
+    add_Actor_to_Film = request.args.get('add_Actor_to_Film')
+    if add_Actor_to_Film is not None:
+        mycursor.execute("""INSERT into FilmActor (Film_Title, Actor_ID, Film_ID) values (%s, %s, %s)""", (Title, add_Actor_to_Film, Film_ID))
+        connection.commit()
+
+    # functionality to remove an actor from a film
+    remove_Actor_ID = request.args.get('remove_Actor_ID')
+    if remove_Actor_ID is not None:
+        mycursor.execute("""DELETE FROM FilmActor WHERE Actor_ID=%s AND Film_ID=%s""", (remove_Actor_ID, Film_ID))
+        connection.commit()
+
+    # for add actor button, retrieve actors not in this film 
+    mycursor.execute("""SELECT Person.Person_ID, Person.First_Name, Person.Last_Name FROM (
+                        SELECT Person_ID FROM Actor
+                        EXCEPT
+                        SELECT Person_ID FROM Actor WHERE Person_ID in(SELECT Actor_ID FROM FilmActor WHERE Film_ID=%s)) as NotThisFilmActors
+                     join Person on NotThisFilmActors.Person_ID=Person.Person_ID
+                     """, (Film_ID,))
+    RemainingActors = mycursor.fetchall()
+    #print(RemainingActors)
+    # IT LIVES :D THanks for all the help Jeff!
 
     # retrieve film information
     mycursor.execute("SELECT Title, Genre, Nationality from Film where Film_ID=%s", (Film_ID,))
@@ -77,25 +113,20 @@ def get_1Film_info():
     
     # retrieve actors for this film
     mycursor.execute("SELECT Person_ID, First_Name, Last_Name FROM Person WHERE Person_ID in (SELECT Actor_ID FROM FilmActor WHERE Film_ID=%s)", (Film_ID,))
-    ActorsInFilm = mycursor.fetchall()
-
-    # retrieve list of other films the actor is not in 
-    mycursor.execute("""SELECT )
-
-
+    CreditedActors = mycursor.fetchall()
+    
     
     mycursor.close()
     connection.close()
 
     return render_template(
         "1Film_info.html", 
-        ActorsInFilm=ActorsInFilm, 
+        CreditedActors=CreditedActors, 
         Film_ID=Film_ID, 
         Title=Title, 
         Genre=Genre, 
         Nationality=Nationality, 
-        CreditedActors=CreditedActors
-        UncreditedActors=AllActors
+        OtherActors=RemainingActors
         )
 
 if __name__ == '__main__':

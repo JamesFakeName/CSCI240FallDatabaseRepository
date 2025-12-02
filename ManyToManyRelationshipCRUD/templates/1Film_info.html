@@ -7,10 +7,10 @@
 {% block content %}
 
 <form action="">
-  <h2>Information for the Film: {{Title}} <input type="hidden" name="Title" value="{{Title}}"><br /></h2>
-  <h2>You may also update {{Title}}'s information here if you wish.<input type="hidden" name="Title" value="{{Title}}"><br /></h2>
+  <h2>Information for the Film:{{Title}}<br /></h2>
+  <h2>You may also update {{Title}}'s information here if you wish.<br /></h2>
   Film ID: <input type="int" name="Film_ID" value="{{Film_ID}}"><br />
-  Film Title: <input type="text" name="Title" value="{{Title}}"><br /> <!-- May need varchar -->
+  Film Title: <input type="text" name="Title" value="{{Title}}"><br /> 
   Film Genre: <input type="text" name="Genre" value="{{Genre}}"><br />
   Film Nation of Origin: <input type="text" name="Nationality" value="{{Nationality}}"><br />
   <input type="submit" value="Update Information">
@@ -25,7 +25,7 @@
     <th>Last Name</th>
     <!-- I don't know if I should add the 'Gender', 'Lead_or_Side_Role', or 'Typical_Role' attributes. Ask Jeff -->
   </tr>
-{% for Actor in ActorsInFilm %} <!-- Check the naming scheme later -->
+{% for Actor in CreditedActors %} <!-- Check the naming scheme later -->
   <tr>
     <td>{{Actor[0]}}</td>
     <td>{{Actor[1]}}</td>
@@ -36,13 +36,13 @@
 {% endfor %}
 </table>
 <form action="">
-<p><label for="register">Add additional actors</label></p>
-<select id="register" name="add_Person_ID"> <!-- Check if Person_ID or Actor_ID -->
-  {% for People in unregistered_sections %}
-  <option value="{{section[0]}}">{{section[0]}} - {{section[1]}} ({{section[2]}})</option>
+<p>Add additional actors</p>
+<select id="text" name="add_Actor_to_Film"> <!-- Check if Person_ID or Actor_ID -->
+  {% for Actor in OtherActors %}
+  <option value="{{Actor[0]}}">{{Actor[0]}} - {{Actor[1]}} ({{Actor[2]}})</option>
   {% endfor %}
 </select>
-<input type="hidden" name="student_id" value="{{student_id}}">
+<input type="hidden" name="Film_ID" value="{{Film_ID}}">
 <input type="submit" value="Add Actor">
 </form>
 {% endblock %}
