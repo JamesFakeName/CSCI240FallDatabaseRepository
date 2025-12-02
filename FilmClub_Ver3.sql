@@ -28,7 +28,7 @@ CREATE TABLE `Actor` (
   `Typical_Role` text,
   `Gender` text,
   PRIMARY KEY (`Person_ID`),
-  CONSTRAINT `fk_Actor_Person` FOREIGN KEY (`Person_ID`) REFERENCES `Person` (`Person_ID`) ON DELETE RESTRICT ON UPDATE CASCADE
+  CONSTRAINT `fk_Actor_Person` FOREIGN KEY (`Person_ID`) REFERENCES `Person` (`Person_ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -266,4 +266,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-02 23:11:12
+-- Dump completed on 2025-12-02 23:25:11
