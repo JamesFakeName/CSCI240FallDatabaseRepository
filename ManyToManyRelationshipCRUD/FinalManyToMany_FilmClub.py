@@ -180,16 +180,57 @@ def get_1Actor_info():
     Person_ID = request.args.get('Person_ID')
     First_Name = request.args.get('First_Name')
     Last_Name = request.args.get('Last_Name')
+    Actor_ID = Person_ID #Real hopefully this will work the way I want
     if Person_ID is not None and First_Name is not None and Last_Name is not None:
         mycursor.execute("UPDATE Person set First_Name=%s, Last_Name=%s where Person_ID=%s", (First_Name, Last_Name, Person_ID))
         connection.commit()
     
-    # functionality to add a film role to the actor on the actor's page
+    # functionality to add a film role to the actor on the actor's page #IT $%^&ING WORKS :D
     assign_Film_to_Actor = request.args.get('assign_Film_to_Actor')
     if assign_Film_to_Actor is not None:
-        mycursor.execute("""INSERT into FilmActor (Film_Title, Actor_ID, Film_ID) values (%s, %s, %s)""", (Title, add_Actor_to_Film, Film_ID))
+        mycursor.execute("""INSERT into FilmActor (Actor_ID, Film_ID) values (%s, %s)""", (Person_ID, assign_Film_to_Actor)) 
+        # ^ deal with Title later?
         connection.commit()
+    
+    # functionality to remove a film credit from an actor
+    remove_Film_ID = request.args.get('remove_Film_ID')
+    if remove_Film_ID is not None:
+        mycursor.execute("""DELETE FROM FilmActor WHERE Actor_ID=%s AND Film_ID=%s""", (Person_ID, remove_Film_ID))
+        connection.commit()
+    
+    # for add film button, to retrieve movies the actor did not star in # Please work
+    mycursor.execute("""SELECT Film.Film_ID, Film.Title, Film.Genre, Film.Nationality FROM (
+                        SELECT Film_ID FROM Film
+                        EXCEPT
+                        SELECT Film_ID FROM Film WHERE Film_ID in(SELECT Film_ID FROM FilmActor WHERE Actor_ID=%s)) as NotThisActorFilms
+                     join Film on NotThisActorFilms.Film_ID=Film.Film_ID
+                     """, (Person_ID,))
+    RemainingFilms = mycursor.fetchall()
 
+    # retrieve Actor information #Make sure this the second lowest subsection
+    mycursor.execute("SELECT First_Name, Last_Name from Person where Person_ID=%s", (Person_ID,))
+    try:
+        First_Name, Last_Name = mycursor.fetchall()[0]
+    except:
+        return render_template("error.html", message="Error retrieving actor info - perhaps you put in the wrong ID?")
+
+# retrieve films this actor has been in #This should be the lowest subsection with functionality I think? You know whatI mean
+    mycursor.execute("SELECT Film_ID, Title, Genre, Nationality FROM Film WHERE Film_ID in (SELECT Film_ID FROM FilmActor WHERE Actor_ID=%s)", (Person_ID,))
+    CreditedRoles = mycursor.fetchall()
+
+    #pageTitle = f"Info (and Update) page for {First_Name} {Last_Name}" 
+
+    mycursor.close()
+    connection.close()
+
+    return render_template(
+        "1Actor_info.html", 
+        CreditedRoles=CreditedRoles, 
+        Person_ID=Person_ID, 
+        First_Name=First_Name, 
+        Last_Name=Last_Name, 
+        OtherFilms=RemainingFilms
+        )
 
 
 if __name__ == '__main__':
