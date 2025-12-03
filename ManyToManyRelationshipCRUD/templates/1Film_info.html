@@ -30,7 +30,7 @@
     <td>{{Actor[0]}}</td>
     <td>{{Actor[1]}}</td>
     <td>{{Actor[2]}}</td>
-    <td><a href="1actor_info?Actor_ID={{Actor[0]}}">View Actor</a></td>
+    <td><a href="1Actor_info?Person_ID={{Actor[0]}}">View Actor</a></td>
     <td><a href="1Film_info?remove_Actor_ID={{Actor[0]}}&Film_ID={{Film_ID}}">Remove Actor from this Film</a></td>
   </tr>
 {% endfor %}
@@ -39,7 +39,7 @@
 <p>Add additional actors</p>
 <select id="text" name="add_Actor_to_Film"> <!-- Check if Person_ID or Actor_ID -->
   {% for Actor in OtherActors %}
-  <option value="{{Actor[0]}}">{{Actor[0]}} - {{Actor[1]}} ({{Actor[2]}})</option>
+  <option value="{{Actor[0]}}">{{Actor[0]}} - {{Actor[1]}} {{Actor[2]}}</option>
   {% endfor %}
 </select>
 <input type="hidden" name="Film_ID" value="{{Film_ID}}">

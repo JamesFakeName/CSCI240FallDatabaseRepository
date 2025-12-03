@@ -117,7 +117,8 @@ def get_1Film_info():
     mycursor.execute("SELECT Person_ID, First_Name, Last_Name FROM Person WHERE Person_ID in (SELECT Actor_ID FROM FilmActor WHERE Film_ID=%s)", (Film_ID,))
     CreditedActors = mycursor.fetchall()
     
-    
+    pageTitle = f"Actor list (and Update) page for {Title}"
+
     mycursor.close()
     connection.close()
 
@@ -128,7 +129,8 @@ def get_1Film_info():
         Title=Title, 
         Genre=Genre, 
         Nationality=Nationality, 
-        OtherActors=RemainingActors
+        OtherActors=RemainingActors,
+        pageTitle=pageTitle
         )
 
 @app.route('/Actor_List', methods=['GET']) #Goes with Actor_List
@@ -211,7 +213,8 @@ def get_1Actor_info():
                         SELECT Film_ID FROM Film
                         EXCEPT
                         SELECT Film_ID FROM Film WHERE Film_ID in(SELECT Film_ID FROM FilmActor WHERE Actor_ID=%s)) as NotThisActorFilms
-                     join Film on NotThisActorFilms.Film_ID=Film.Film_ID
+                        join Film on NotThisActorFilms.Film_ID=Film.Film_ID
+                        ORDER BY Film.Film_ID
                      """, (Person_ID,))
     RemainingFilms = mycursor.fetchall()
 
@@ -226,7 +229,7 @@ def get_1Actor_info():
     mycursor.execute("SELECT Film_ID, Title, Genre, Nationality FROM Film WHERE Film_ID in (SELECT Film_ID FROM FilmActor WHERE Actor_ID=%s)", (Person_ID,))
     CreditedRoles = mycursor.fetchall()
 
-    #pageTitle = f"Info (and Update) page for {First_Name} {Last_Name}" 
+    pageTitle = f"Info (and Update) page for {First_Name} {Last_Name}" 
 
     mycursor.close()
     connection.close()
@@ -237,7 +240,8 @@ def get_1Actor_info():
         Person_ID=Person_ID, 
         First_Name=First_Name, 
         Last_Name=Last_Name, 
-        OtherFilms=RemainingFilms
+        OtherFilms=RemainingFilms,
+        pageTitle=pageTitle
         )
 
 
