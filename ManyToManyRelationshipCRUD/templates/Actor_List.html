@@ -33,6 +33,14 @@
 
 
 <h3>Add a new actor</h3>
+<!-- Be prepared to kill this -->
+<label for="test_Dropdown">As a heads up these IDs (in the dropdown box) are not allowed:</label>
+<select id="test_Dropdown" name="Forbidden_List">
+  {% for ID in Forbidden_IDs %} <!-- uhhh -->
+  <option value="{{ID[0]}}">{{ID[0]}}</option>
+  {% endfor %}
+</select>
+<!-- Be prepared to kill the above -->
 <form action="">
   Actor ID: <input name="new_Person_ID" ><br /> 
   First Name: <input name="new_First_Name"><br /> 

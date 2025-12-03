@@ -11,7 +11,9 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def index():
-     return render_template('base.html')
+     pageTitle = "Welcome to the FilmClub Database webpage!"
+     pageTitle2 = "Please enjoy your stay."
+     return render_template('base.html', pageTitle=pageTitle, pageTitle2=pageTitle2)
 
 @app.route('/Film_List', methods=['GET']) #uhhh this goes with the Film_List.html
 def get_Films():
@@ -159,11 +161,17 @@ def get_Actor_List():
                      SELECT Person_ID FROM Actor)""")
     allActors = mycursor.fetchall()
 
+    # ATTENTION HERE # attempt to get a listing of unallowed Actor IDs 
+    mycursor.execute("""SELECT Person_ID FROM Person
+                        EXCEPT
+                        SELECT Person_ID FROM Person WHERE Person_ID in(SELECT Person_ID FROM Actor )""")
+    Forbidden_IDs = mycursor.fetchall()
+
     pageTitle = "Showing all actors in the database"
 
     mycursor.close()
     connection.close()
-    return render_template('Actor_List.html', allActors=allActors, pageTitle=pageTitle)
+    return render_template('Actor_List.html', allActors=allActors, Forbidden_IDs=Forbidden_IDs, pageTitle=pageTitle)
 
 @app.route('/1Actor_info', methods=['GET']) #Goes with 1Actor_info
 def get_1Actor_info():
