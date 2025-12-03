@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block header %}{{pageTitle}}{% endblock %}
+{% block title %}{{First_Name}} {{Last_Name}} Information{% endblock %}
+
+
+{% block content %}
+
+<form action="">
+  <h2>Info about the Actor:{{First_Name}} {{Last_Name}}<br /></h2>
+  <h2>You may also update {{First_Name}} {{Last_Name}}'s information here if you wish.<br /></h2>
+  Actor ID: <input type="int" name="Person_ID" value="{{Person_ID}}"><br />
+  First Name: <input type="text" name="First_Name" value="{{First_Name}}"><br /> 
+  Last Name: <input type="text" name="Last_Name" value="{{Last_Name}}"><br />
+  <input type="submit" value="Update Information">
+</form>
+
+<h2>Films this actor has performed in:</h2>
+
+<table>
+  <tr>
+    <th>Film ID</th>
+    <th>Title</th>
+    <th>Genre</th>
+    <th>Nation of Origin</th>
+  </tr>
+{% for Film in UPDATETHISNAME %} <!-- Check the naming scheme later -->
+  <tr>
+    <td>{{Film[0]}}</td>
+    <td>{{Film[1]}}</td>
+    <td>{{Film[2]}}</td>
+    <td><a href="1Film_info?Film_ID={{Film[0]}}">View Film</a></td>
+    <td><a href="1Actor_info?remove_Film_ID={{Film[0]}}&Person_ID={{Person_ID}}">Remove this film credit</a></td>
+  </tr>
+{% endfor %}
+</table>
+<form action="">
+<p>Add this actor to more films</p>
+<select id="text" name="assign_Film_to_Actor"> <!-- Check if Person_ID or Actor_ID -->
+  {% for Film in OtherFilms %} <!-- Need to create OtherFilms-->
+  <option value="{{Film[0]}}">{{Film[0]}} - {{Film[1]}} - {{Film[2]}} - {{Film[3]}}</option>
+  {% endfor %}
+</select>
+<input type="hidden" name="Person_ID" value="{{Person_ID}}">
+<input type="submit" value="Add to Film">
+</form>
+{% endblock %}
+<!-- I could have been better about setting up variable names-->
+<!--VarNames: from Person table: Person_ID, First_Name, Last_Name -->
+<!-- from Actor table: Person_ID, Lead_or_Side_Role, Typical_Role, Gender -->
+<!-- from FilmActor relationship table: Film_Title, Actor_ID, Film_ID -->

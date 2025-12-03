@@ -32,7 +32,7 @@ def get_Films():
     delete_Film_ID = request.args.get('delete_Film_id')
     if delete_Film_ID is not None:
         try:
-            mycursor.execute("delete from Film where Film_ID=%s",(delete_Film_ID,))
+            mycursor.execute("DELETE FROM Film WHERE Film_ID=%s",(delete_Film_ID,))
             connection.commit()
         except:
             return render_template("error.html", message="Error deleting Film") # more specific error if time allows
@@ -128,6 +128,69 @@ def get_1Film_info():
         Nationality=Nationality, 
         OtherActors=RemainingActors
         )
+
+@app.route('/Actor_List', methods=['GET']) #Goes with Actor_List
+def get_Actor_List():
+    connection = mysql.connector.connect(**creds) #I'm going to leave this here just in case
+    mycursor = connection.cursor()
+
+    # check to see if a new actor is to be added #WHY DO YOU WORK NOW???
+    new_Person_ID = request.args.get('new_Person_ID')
+    new_First_Name = (request.args.get('new_First_Name'))
+    new_Last_Name = (request.args.get('new_Last_Name'))
+    if new_Person_ID is not None and new_First_Name is not None and new_Last_Name is not None:
+        mycursor.execute("""INSERT INTO Person (Person_ID, First_Name, Last_Name) 
+                         values (%s, %s, %s)""",(new_Person_ID, new_First_Name, new_Last_Name)) #This should be fine due to implict line continuation
+        connection.commit()
+        mycursor.execute("INSERT INTO Actor (Person_ID) values (%s)", (new_Person_ID,))
+        connection.commit()
+
+    # check to see if an actor needs to be deleted
+    delete_Person_ID = request.args.get('delete_Person_ID')
+    if delete_Person_ID is not None:
+        try:
+            mycursor.execute("DELETE FROM Person WHERE Person_ID=%s",(delete_Person_ID,)) #should cascade delete
+            connection.commit()
+        except:
+            return render_template("error.html", message="Error deleting this actor") # more specific error if time allows
+        
+    # retrieve all actors
+    mycursor.execute("""SELECT Person_ID, First_Name, Last_Name FROM Person WHERE Person_ID in (
+                     SELECT Person_ID FROM Actor)""")
+    allActors = mycursor.fetchall()
+
+    pageTitle = "Showing all actors in the database"
+
+    mycursor.close()
+    connection.close()
+    return render_template('Actor_List.html', allActors=allActors, pageTitle=pageTitle)
+
+@app.route('/1Actor_info', methods=['GET']) #Goes with 1Actor_info
+def get_1Actor_info():
+    Person_ID = request.args.get('Person_ID')
+    
+    # redirect to all actors if no id was provided
+    if Person_ID is None:
+        return redirect(url_for("get_Actor_List"))
+
+    connection = mysql.connector.connect(**creds) #Don't think I need this w/ connection up top. Keeping for now, in case
+    mycursor = connection.cursor()
+
+    # update actor info
+    Person_ID = request.args.get('Person_ID')
+    First_Name = request.args.get('First_Name')
+    Last_Name = request.args.get('Last_Name')
+    if Person_ID is not None and First_Name is not None and Last_Name is not None:
+        mycursor.execute("UPDATE Person set First_Name=%s, Last_Name=%s where Person_ID=%s", (First_Name, Last_Name, Person_ID))
+        connection.commit()
+    
+    # functionality to add a film role to the actor on the actor's page
+    assign_Film_to_Actor = request.args.get('assign_Film_to_Actor')
+    if assign_Film_to_Actor is not None:
+        mycursor.execute("""INSERT into FilmActor (Film_Title, Actor_ID, Film_ID) values (%s, %s, %s)""", (Title, add_Actor_to_Film, Film_ID))
+        connection.commit()
+
+
 
 if __name__ == '__main__':
     app.run(port=8001, debug=True, host="0.0.0.0")
